@@ -162,8 +162,8 @@
             <div id="payPrice" style="font-size:22px;font-weight:900;margin-bottom:20px;color:var(--primary-red);text-align:center;"></div>
             <button class="btn-buy" id="btnLanjutkan" onclick="tampilkanQRIS()">Lanjutkan</button>
         </div>
-        <div id="step-qris" style="display:none;text-align:center;">
-            <h3 style="color:var(--primary-red);margin-bottom:15px;text-transform:uppercase;">Invoice Pembayaran</h3>
+        <div id="step-qris" style="display:none; text-align:center;">
+            <h3 style="color:var(--primary-red); margin-bottom:15px; text-transform:uppercase;">Invoice Pembayaran</h3>
             <table class="qr-info-table">
                 <tr>
                     <td><div class="qr-label">Nama</div><div id="qrBuyerName" class="qr-value">—</div></td>
@@ -190,7 +190,10 @@
             <h3 style="color:var(--success-green);margin-bottom:5px;">PEMBAYARAN LUNAS!</h3>
             
             <div style="margin-bottom: 15px; font-size: 11px; color: #8e959e; line-height: 1.5;">
-                TRX ID: <span id="successTrxId" style="color:var(--primary-red); font-weight: bold;">—</span><br>
+                <div style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+                    TRX ID: <span id="successTrxId" style="color:var(--primary-red); font-weight: bold;">—</span>
+                    <button onclick="copyTrx()" style="background: var(--primary-red); border:none; color:#fff; font-size:8px; padding:2px 6px; border-radius:4px; cursor:pointer;">COPY</button>
+                </div>
                 EMAIL: <span id="successEmail" style="color: #fff;">—</span>
             </div>
 
@@ -266,6 +269,7 @@
         setTimeout(() => t.classList.remove('show'), 3000);
     }
     function copyData(id) { navigator.clipboard.writeText(document.getElementById(id).innerText); showToast("Disalin!", true); }
+    function copyTrx() { navigator.clipboard.writeText(document.getElementById('successTrxId').innerText); showToast("TRX ID Disalin!", true); }
 
     // INIT WEB
     async function initWeb() {
@@ -346,7 +350,7 @@
             document.getElementById('step-input').style.display = 'none';
             document.getElementById('step-qris').style.display = 'block';
             cashifyTransactionId = transactionId; startCountdown(15 * 60); mulaiPolling();
-        } catch (err) { showToast("Gagal QRIS!"); btn.disabled = false; btn.innerHTML = 'Lanjutkan'; }
+        } catch(err) { showToast("Gagal QRIS!"); btn.disabled = false; btn.innerHTML = 'Lanjutkan'; }
     }
 
     function startCountdown(duration) {
@@ -370,7 +374,18 @@
 
     async function prosesLunas() {
         if (!_ok) return;
-        const trxId = `TRX-${Math.floor(100000 + Math.random() * 900000)}`;
+        
+        // --- LOGIKA GENERATE TRX ID CUSTOM BOS ---
+        const now = new Date();
+        const thn = now.getFullYear();
+        const tgl = String(now.getDate()).padStart(2, '0');
+        const jam = String(now.getHours()).padStart(2, '0');
+        const mnt = String(now.getMinutes()).padStart(2, '0');
+        const randomKe = Math.floor(100 + Math.random() * 899);
+        
+        const trxId = `TRX-${thn}${hargaFix}${randomKe}${tgl}${jam}${mnt}9`;
+        // -----------------------------------------
+
         const emailU = document.getElementById('buyerEmail').value;
         try {
             await fetch(`${DB_PRODUK}stok_akun/${selectedProdId}/${selectedAkunId}.json`, { method:'DELETE' });
