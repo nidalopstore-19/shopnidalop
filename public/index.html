@@ -10,20 +10,22 @@
 
     <style>
 
-        /* --- 1. PRELOADER (DYNAMICS) --- */
         #preloader {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             background: #000000;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
             z-index: 999999999;
-            transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1), visibility 1s;
+            /* Properti transisi ditingkatkan agar lebih smooth */
+            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.8s;
+            opacity: 1;
+            visibility: visible;
         }
-        #preloader.fade-out { opacity: 0; visibility: hidden; }
-        
+        #preloader.fade-out { 
+            opacity: 0; 
+            visibility: hidden; 
+        }
         .orbit-container { position: relative; width: 85px; height: 85px; }
         .orbit-ring { position: absolute; width: 100%; height: 100%; border: 2px solid rgba(255,255,255,0.05); border-radius: 50%; }
         .orbit-spinner { position: absolute; width: 100%; height: 100%; border-radius: 50%; animation: orbit-spin 1.2s linear infinite; }
@@ -329,7 +331,7 @@
         if (!n || !e) return showToast("Isi data!");
         const btn = document.getElementById('btnLanjutkan'); btn.disabled = true; btn.innerHTML = 'Memproses...';
         try {
-            const res = await fetch('/api/generate', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ id: CASHIFY_QRIS_ID, amount: hargaFix, useUniqueCode: true }) });
+            const res = await fetch('/api/generate', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ id: CASHIFY_QRIS_ID, amount: hargaFix, useUniqueCode: true, packageIds: ["id.dana"], expiredInMinutes: 15 }) });
             const json = await res.json();
             const { qr_string, transactionId, totalAmount } = json.data;
             document.getElementById('qrisImg').src = `https://larabert-qrgen.hf.space/v1/create-qr-code?data=${encodeURIComponent(qr_string)}`;
