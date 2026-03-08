@@ -17,7 +17,6 @@
             display: flex; flex-direction: column;
             align-items: center; justify-content: center;
             z-index: 999999999;
-            /* Properti transisi ditingkatkan agar lebih smooth */
             transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.8s;
             opacity: 1;
             visibility: visible;
@@ -111,6 +110,15 @@
         .lock-footer { margin-top: 35px; font-size: 9px; color: #333; text-transform: uppercase; letter-spacing: 2px; font-weight: 800; }
 
         ._wm { display:none!important; }
+
+        /* --- ANIMASI CEKLIS MEWAH --- */
+        .success-animation { margin: 20px auto; }
+        .checkmark { width: 80px; height: 80px; border-radius: 50%; display: block; stroke-width: 2; stroke: #fff; stroke-miterlimit: 10; box-shadow: inset 0px 0px 0px var(--success-green); animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both; position: relative; margin: 0 auto; }
+        .checkmark__circle { stroke-dasharray: 166; stroke-dashoffset: 166; stroke-width: 2; stroke-miterlimit: 10; stroke: var(--success-green); fill: none; animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards; }
+        .checkmark__check { transform-origin: 50% 50%; stroke-dasharray: 48; stroke-dashoffset: 48; animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards; }
+        @keyframes stroke { 100% { stroke-dashoffset: 0; } }
+        @keyframes scale { 0%, 100% { transform: none; } 50% { transform: scale3d(1.1, 1.1, 1); } }
+        @keyframes fill { 100% { box-shadow: inset 0px 0px 0px 80px var(--success-green); } }
     </style>
 </head>
 <body>
@@ -185,17 +193,25 @@
             </div>
             <button class="btn-buy" disabled style="background:#242a32;">MENUNGGU PEMBAYARAN...</button>
         </div>
-        <div id="step-success" style="display:none;text-align:center;">
-            <div style="font-size:40px;margin-bottom:10px;">✅</div>
-            <h3 style="color:var(--success-green);margin-bottom:5px;">PEMBAYARAN LUNAS!</h3>
-            
-            <div style="margin-bottom: 15px; font-size: 11px; color: #8e959e; line-height: 1.5;">
-                <div style="display: flex; align-items: center; justify-content: center; gap: 8px;">
-                    TRX ID: <span id="successTrxId" style="color:var(--primary-red); font-weight: bold;">—</span>
-                    <button onclick="copyTrx()" style="background: var(--primary-red); border:none; color:#fff; font-size:8px; padding:2px 6px; border-radius:4px; cursor:pointer;">COPY</button>
-                </div>
-                EMAIL: <span id="successEmail" style="color: #fff;">—</span>
+        
+        <div id="step-success" style="display:none; text-align:center;">
+            <div class="success-animation">
+                <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52"><circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none" /><path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" /></svg>
             </div>
+            <h3 style="color:var(--success-green); margin-bottom:15px; letter-spacing: 1px;">PEMBAYARAN LUNAS!</h3>
+            
+            <div style="background: #242a32; border-radius: 20px; padding: 20px; margin-bottom: 12px; border: 1.5px solid rgba(255,255,255,0.1); text-align: left;">
+                <div style="margin-bottom: 15px;">
+                    <div style="font-size: 10px; color: #8e959e; text-transform: uppercase; font-weight: 800; letter-spacing: 1px;">ID Transaksi</div>
+                    <div id="successTrxId" style="color:#ffffff; font-size: 16px; font-weight: 900; margin-top: 4px; word-break: break-all;">—</div>
+                </div>
+                <div style="border-top: 1px solid rgba(255,255,255,0.05); padding-top: 15px;">
+                    <div style="font-size: 10px; color: #8e959e; text-transform: uppercase; font-weight: 800; letter-spacing: 1px;">Email Pembeli</div>
+                    <div id="successEmail" style="color: #ffffff; font-size: 14px; font-weight: 600; margin-top: 4px; word-break: break-all;">—</div>
+                </div>
+            </div>
+
+            <button onclick="copyTrx()" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color:#fff; font-size:11px; padding:10px 20px; border-radius:12px; cursor:pointer; font-weight: bold; width: 100%; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; gap: 8px;">📋 COPY TRX ID</button>
 
             <div id="finalData" class="data-box"></div>
             <button class="btn-buy" style="margin-top:15px;" onclick="location.reload()">TUTUP</button>
@@ -250,12 +266,10 @@
             .catch(() => {});
     })();
 
-    // VARIABEL GLOBAL
     const produkCache = {};
     let selectedProdId, selectedAkunId, selectedDataAkun, hargaFix;
     let cashifyTransactionId, pollingInterval, countdownInterval;
 
-    // UTILS
     function getFullDate() {
         const days = ["MINGGU","SENIN","SELASA","RABU","KAMIS","JUMAT","SABTU"];
         const months = ["JAN","FEB","MAR","APR","MEI","JUN","JUL","AGU","SEP","OKT","NOV","DES"];
@@ -271,7 +285,6 @@
     function copyData(id) { navigator.clipboard.writeText(document.getElementById(id).innerText); showToast("Disalin!", true); }
     function copyTrx() { navigator.clipboard.writeText(document.getElementById('successTrxId').innerText); showToast("TRX ID Disalin!", true); }
 
-    // INIT WEB
     async function initWeb() {
         if (!_ok) return;
         updateClock(); setInterval(updateClock, 1000);
@@ -292,7 +305,6 @@
         } catch (e) { document.getElementById('preloader').style.display = 'none'; }
     }
 
-    // FETCH PRODUK
     async function fetchProducts() {
         try {
             const [resP, resS] = await Promise.all([fetch(`${DB_PRODUK}produk.json`), fetch(`${DB_PRODUK}stok_akun.json`)]);
@@ -320,7 +332,6 @@
         } catch (e) {}
     }
 
-    // MODAL PEMBAYARAN
     function openPayment(id) {
         if (!_ok) return;
         const p = produkCache[id]; const list = Object.keys(p.stok);
@@ -375,7 +386,6 @@
     async function prosesLunas() {
         if (!_ok) return;
         
-        // --- LOGIKA GENERATE TRX ID CUSTOM BOS ---
         const now = new Date();
         const thn = now.getFullYear();
         const tgl = String(now.getDate()).padStart(2, '0');
@@ -384,7 +394,6 @@
         const randomKe = Math.floor(100 + Math.random() * 899);
         
         const trxId = `TRX-${thn}${hargaFix}${randomKe}${tgl}${jam}${mnt}9`;
-        // -----------------------------------------
 
         const emailU = document.getElementById('buyerEmail').value;
         try {
@@ -393,14 +402,13 @@
             await fetch(`${DB_PRODUK}produk/${selectedProdId}.json`, { method:'PATCH', body: JSON.stringify({ terjual: newSold }) });
             await fetch(`${DB_PRODUK}transaksi/${trxId}.json`, { method:'PUT', body: JSON.stringify({ data: selectedDataAkun, email: emailU, id_trx: trxId }) });
             
-            // ISI DATA TRX & EMAIL KE TAMPILAN SUKSES
             document.getElementById('successTrxId').innerText = trxId;
             document.getElementById('successEmail').innerText = emailU;
             
             document.getElementById('finalData').innerText = selectedDataAkun;
             document.getElementById('step-qris').style.display = 'none';
             document.getElementById('step-success').style.display = 'block';
-            showToast("Lunas!", true);
+            showToast("Pembayaran Berhasil!", true);
         } catch (e) { showToast("Error Simpan Data!"); }
     }
 
@@ -419,7 +427,7 @@
         if (!id) return showToast("Masukkan ID Transaksi!");
         const res = await fetch(`${DB_PRODUK}transaksi/${id}.json`);
         const d = await res.json();
-        if (!d) return showToast("Tidak ditemukan!");
+        if (!d) return showToast("ID Tidak ditemukan!");
         document.getElementById('invoiceResult').innerHTML = `<div class="data-box" id="invData">${d.data}</div><button class="btn-buy" style="background:var(--success-green);margin-top:10px;" onclick="copyData('invData')">SALIN DATA</button>`;
     }
 
