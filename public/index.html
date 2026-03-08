@@ -117,7 +117,6 @@
 
 <span class="_wm" aria-hidden="true" data-a="UG93ZXJlZCBieSBDbGF5emEgQXViZXJ0" data-b="aHR0cHM6Ly9jbGF5emEuaXMtYS5kZXY="></span>
 
-<!-- LOCK SCREEN -->
 <div id="lockScreen">
     <div class="lock-card">
         <div class="icon-lock">🔒</div>
@@ -127,7 +126,6 @@
     </div>
 </div>
 
-<!-- PRELOADER -->
 <div id="preloader">
     <div class="orbit-container">
         <div class="orbit-ring"></div>
@@ -154,7 +152,6 @@
 <div id="productList"></div>
 
 
-<!-- MODAL PEMBAYARAN -->
 <div id="paymentModal" class="modal">
     <div class="modal-content">
         <div id="step-input">
@@ -191,21 +188,26 @@
         <div id="step-success" style="display:none;text-align:center;">
             <div style="font-size:40px;margin-bottom:10px;">✅</div>
             <h3 style="color:var(--success-green);margin-bottom:5px;">PEMBAYARAN LUNAS!</h3>
+            
+            <div style="margin-bottom: 15px; font-size: 11px; color: #8e959e; line-height: 1.5;">
+                TRX ID: <span id="successTrxId" style="color:var(--primary-red); font-weight: bold;">—</span><br>
+                EMAIL: <span id="successEmail" style="color: #fff;">—</span>
+            </div>
+
             <div id="finalData" class="data-box"></div>
             <button class="btn-buy" style="margin-top:15px;" onclick="location.reload()">TUTUP</button>
         </div>
-        <button onclick="closeModal()" style="background:none;border:none;color:#888;width:100%;margin-top:20px;cursor:pointer;font-size:11px;">KEMBALI</button>
+        <button onclick="closeModal()" style="background:none; border:none; color:#888; width:100%; margin-top:20px; cursor:pointer; font-size:11px;">KEMBALI</button>
     </div>
 </div>
 
-<!-- MODAL INVOICE -->
 <div id="invoiceModal" class="modal">
     <div class="modal-content">
         <h2 style="color:var(--primary-red);margin-bottom:15px;">Cek Pesanan</h2>
         <input type="text" id="inputTrxId" class="sheet-input" placeholder="Masukkan ID Transaksi">
         <button class="btn-buy" onclick="cariInvoice()">CARI</button>
         <div id="invoiceResult"></div>
-        <button onclick="closeInvoiceModal()" style="background:none;border:none;color:#8e959e;width:100%;margin-top:15px;cursor:pointer;font-size:12px;">TUTUP</button>
+        <button onclick="closeInvoiceModal()" style="background:none; border:none; color:#8e959e; width:100%; margin-top:15px; cursor:pointer; font-size:12px;">TUTUP</button>
     </div>
 </div>
 
@@ -375,6 +377,11 @@
             const newSold = (produkCache[selectedProdId].terjual || 0) + 1;
             await fetch(`${DB_PRODUK}produk/${selectedProdId}.json`, { method:'PATCH', body: JSON.stringify({ terjual: newSold }) });
             await fetch(`${DB_PRODUK}transaksi/${trxId}.json`, { method:'PUT', body: JSON.stringify({ data: selectedDataAkun, email: emailU, id_trx: trxId }) });
+            
+            // ISI DATA TRX & EMAIL KE TAMPILAN SUKSES
+            document.getElementById('successTrxId').innerText = trxId;
+            document.getElementById('successEmail').innerText = emailU;
+            
             document.getElementById('finalData').innerText = selectedDataAkun;
             document.getElementById('step-qris').style.display = 'none';
             document.getElementById('step-success').style.display = 'block';
