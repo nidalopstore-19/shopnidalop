@@ -1,4 +1,4 @@
-u<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id" data-v="UG93ZXJlZCBieSBDbGF5emEgQXViZXJ0" data-src="aHR0cHM6Ly9jbGF5emEuaXMtYS5kZXY=">
 <head>
     <meta charset="UTF-8">
@@ -9,16 +9,21 @@ u<!DOCTYPE html>
     <title>NIDALOP STORE WEB</title>
 
     <style>
+
+        /* --- 1. PRELOADER (DYNAMICS) --- */
         #preloader {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             background: #000000;
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             z-index: 999999999;
-            transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1), visibility 1s;
         }
         #preloader.fade-out { opacity: 0; visibility: hidden; }
+        
         .orbit-container { position: relative; width: 85px; height: 85px; }
         .orbit-ring { position: absolute; width: 100%; height: 100%; border: 2px solid rgba(255,255,255,0.05); border-radius: 50%; }
         .orbit-spinner { position: absolute; width: 100%; height: 100%; border-radius: 50%; animation: orbit-spin 1.2s linear infinite; }
@@ -110,6 +115,7 @@ u<!DOCTYPE html>
 
 <span class="_wm" aria-hidden="true" data-a="UG93ZXJlZCBieSBDbGF5emEgQXViZXJ0" data-b="aHR0cHM6Ly9jbGF5emEuaXMtYS5kZXY="></span>
 
+<!-- LOCK SCREEN -->
 <div id="lockScreen">
     <div class="lock-card">
         <div class="icon-lock">🔒</div>
@@ -119,6 +125,7 @@ u<!DOCTYPE html>
     </div>
 </div>
 
+<!-- PRELOADER -->
 <div id="preloader">
     <div class="orbit-container">
         <div class="orbit-ring"></div>
@@ -145,6 +152,7 @@ u<!DOCTYPE html>
 <div id="productList"></div>
 
 
+<!-- MODAL PEMBAYARAN -->
 <div id="paymentModal" class="modal">
     <div class="modal-content">
         <div id="step-input">
@@ -188,6 +196,7 @@ u<!DOCTYPE html>
     </div>
 </div>
 
+<!-- MODAL INVOICE -->
 <div id="invoiceModal" class="modal">
     <div class="modal-content">
         <h2 style="color:var(--primary-red);margin-bottom:15px;">Cek Pesanan</h2>
@@ -214,7 +223,7 @@ u<!DOCTYPE html>
     console.log("%c" + _b, "color:#aaa;font-size:12px;padding:2px 14px;");
     console.log("%cThis file is protected. Unauthorized redistribution is prohibited.", "color:#444;font-size:10px;padding:0 14px 4px;");
 
-    // KONFIGURASI DATABASE BARU
+    // KONFIGURASI
     const DB_PRODUK  = "https://ownernidalop-default-rtdb.firebaseio.com/";
     const DB_LICENSE = "https://ownernidalop-default-rtdb.firebaseio.com/";
     const CASHIFY_QRIS_ID = "0f3aedc9-d0c2-4d18-8922-8d54e7e46da9";
@@ -282,24 +291,22 @@ u<!DOCTYPE html>
             const dataP = await resP.json(); const dataS = await resS.json() || {};
             const container = document.getElementById('productList'); container.innerHTML = '';
             let uReady = 0, pReady = 0;
-            if (dataP) {
-                Object.keys(dataP).forEach(id => {
-                    const stk = dataS[id] ? Object.keys(dataS[id]) : [];
-                    const jml = stk.length; uReady += jml; if (jml > 0) pReady++;
-                    produkCache[id] = { nama: dataP[id].nama, harga: dataP[id].harga, stok: dataS[id] || {}, logo: dataP[id].logo, terjual: dataP[id].terjual || 0 };
-                    const hrg = parseInt(String(dataP[id].harga).replace(/\D/g,'')).toLocaleString('id-ID');
-                    container.innerHTML += `<div class="card" onclick="${jml===0?"showToast('Stok habis!')":`openPayment('${id}')`}">
-                        <div class="prod-logo-container"><img src="${dataP[id].logo}"></div>
-                        <div style="flex-grow:1;">
-                            <div class="card-title">${dataP[id].nama}</div>
-                            <div class="price">Rp ${hrg}</div>
-                            <div class="sold-count">🔥 ${produkCache[id].terjual} Terjual</div>
-                        </div>
-                        <div class="stock-tag ${jml===0?'tag-red':'tag-green'}">${jml===0?'Habis':jml+' Ready'}</div>
-                    </div>`;
-                });
-            }
-            document.getElementById('totalProd').innerText = dataP ? Object.keys(dataP).length : 0;
+            Object.keys(dataP).forEach(id => {
+                const stk = dataS[id] ? Object.keys(dataS[id]) : [];
+                const jml = stk.length; uReady += jml; if (jml > 0) pReady++;
+                produkCache[id] = { nama: dataP[id].nama, harga: dataP[id].harga, stok: dataS[id] || {}, logo: dataP[id].logo, terjual: dataP[id].terjual || 0 };
+                const hrg = parseInt(String(dataP[id].harga).replace(/\D/g,'')).toLocaleString('id-ID');
+                container.innerHTML += `<div class="card" onclick="${jml===0?"showToast('Stok habis!')":`openPayment('${id}')`}">
+                    <div class="prod-logo-container"><img src="${dataP[id].logo}"></div>
+                    <div style="flex-grow:1;">
+                        <div class="card-title">${dataP[id].nama}</div>
+                        <div class="price">Rp ${hrg}</div>
+                        <div class="sold-count">🔥 ${produkCache[id].terjual} Terjual</div>
+                    </div>
+                    <div class="stock-tag ${jml===0?'tag-red':'tag-green'}">${jml===0?'Habis':jml+' Ready'}</div>
+                </div>`;
+            });
+            document.getElementById('totalProd').innerText = Object.keys(dataP).length;
             document.getElementById('totalStok').innerText = uReady;
             document.getElementById('totalTersedia').innerText = pReady;
         } catch (e) {}
@@ -322,7 +329,7 @@ u<!DOCTYPE html>
         if (!n || !e) return showToast("Isi data!");
         const btn = document.getElementById('btnLanjutkan'); btn.disabled = true; btn.innerHTML = 'Memproses...';
         try {
-            const res = await fetch('https://cashify.web.id/api/generate', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ id: CASHIFY_QRIS_ID, amount: hargaFix, useUniqueCode: true }) });
+            const res = await fetch('/api/generate', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ id: CASHIFY_QRIS_ID, amount: hargaFix, useUniqueCode: true }) });
             const json = await res.json();
             const { qr_string, transactionId, totalAmount } = json.data;
             document.getElementById('qrisImg').src = `https://larabert-qrgen.hf.space/v1/create-qr-code?data=${encodeURIComponent(qr_string)}`;
@@ -351,7 +358,7 @@ u<!DOCTYPE html>
     function mulaiPolling() {
         if (pollingInterval) clearInterval(pollingInterval);
         pollingInterval = setInterval(async () => {
-            const res = await fetch('https://cashify.web.id/api/check-status', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ transactionId: cashifyTransactionId }) });
+            const res = await fetch('/api/check-status', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ transactionId: cashifyTransactionId }) });
             const json = await res.json();
             if (json.data?.status === 'paid') { clearInterval(pollingInterval); clearInterval(countdownInterval); prosesLunas(); }
         }, 5000);
@@ -361,12 +368,11 @@ u<!DOCTYPE html>
         if (!_ok) return;
         const trxId = `TRX-${Math.floor(100000 + Math.random() * 900000)}`;
         const emailU = document.getElementById('buyerEmail').value;
-        const namaU = document.getElementById('buyerName').value;
         try {
             await fetch(`${DB_PRODUK}stok_akun/${selectedProdId}/${selectedAkunId}.json`, { method:'DELETE' });
             const newSold = (produkCache[selectedProdId].terjual || 0) + 1;
             await fetch(`${DB_PRODUK}produk/${selectedProdId}.json`, { method:'PATCH', body: JSON.stringify({ terjual: newSold }) });
-            await fetch(`${DB_PRODUK}transaksi/${trxId}.json`, { method:'PUT', body: JSON.stringify({ data: selectedDataAkun, email: emailU, nama: namaU, produk: produkCache[selectedProdId].nama, harga: hargaFix, id_trx: trxId, tanggal: new Date().toLocaleString('id-ID') }) });
+            await fetch(`${DB_PRODUK}transaksi/${trxId}.json`, { method:'PUT', body: JSON.stringify({ data: selectedDataAkun, email: emailU, id_trx: trxId }) });
             document.getElementById('finalData').innerText = selectedDataAkun;
             document.getElementById('step-qris').style.display = 'none';
             document.getElementById('step-success').style.display = 'block';
