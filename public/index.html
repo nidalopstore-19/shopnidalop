@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="id" data-v="UG93ZXJlZCBieSBDbGF5emEgQXViZXJ0" data-src="aHR0cHM6Ly9jbGF5emEuaXMtYS5kZXY=">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="author" content="Q2xheXphIEF1YmVydA==">
+    <meta name="x-src" content="aHR0cHM6Ly9jbGF5emEuaXMtYS5kZXY=">
+    <meta name="x-sig" content="UG93ZXJlZCBieSBDbGF5emEgQXViZXJ0IHwgaHR0cHM6Ly9jbGF5emEuaXMtYS5kZXY=">
+    <title>NIDALOP STORE WEB</title>
+
+    <style>
+        #preloader {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #000000;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            z-index: 999999999;
+            transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        #preloader.fade-out { opacity: 0; visibility: hidden; }
+        .orbit-container { position: relative; width: 85px; height: 85px; }
+        .orbit-ring { position: absolute; width: 100%; height: 100%; border: 2px solid rgba(255,255,255,0.05); border-radius: 50%; }
+        .orbit-spinner { position: absolute; width: 100%; height: 100%; border-radius: 50%; animation: orbit-spin 1.2s linear infinite; }
+        .orbit-ball {
+            position: absolute; top: -8px; left: 50%; width: 16px; height: 16px;
+            background-color: var(--primary-red, #ffffff); border-radius: 50%; transform: translateX(-50%);
+            box-shadow: 0 0 15px var(--primary-red,#ffffff), 0 0 30px var(--primary-red,#ffffff);
+            transition: background-color 0.5s, box-shadow 0.5s;
+        }
+        .loader-text { margin-top: 35px; color: var(--primary-red,#ffffff); font-size: 11px; font-weight: 900; letter-spacing: 5px; text-transform: uppercase; opacity: 0.8; text-align: center; }
+        @keyframes orbit-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        :root { --primary-red: #ffffff; --card-bg: rgba(22,26,30,0.7); --success-green: #10b981; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+
+        body {
+            background-color: #0b0d0f;
+            background-size: cover !important; background-position: center !important; background-attachment: fixed !important;
+            color: #ffffff; max-width: 500px; margin: auto; overflow-x: hidden; min-height: 100vh; padding: 25px 15px;
+        }
+
+        #liveClock { font-size: 10.5px; color: #8e959e; font-weight: 700; letter-spacing: 1px; margin-top: 8px; text-transform: uppercase; text-align: center; }
+
+        .toast {
+            position: fixed; top: -100px; left: 50%; transform: translateX(-50%);
+            background: #ff4d4d; color: white; padding: 12px 20px;
+            border-radius: 12px; font-size: 13px; font-weight: bold; z-index: 10000;
+            transition: 0.5s; width: 90%; max-width: 400px; text-align: center;
+            opacity: 0; pointer-events: none; box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+        }
+        .toast.show { top: 20px; opacity: 1; pointer-events: auto; }
+        .toast.success { background: var(--success-green); }
+
+        .header { text-align: center; margin-bottom: 25px; padding-top: 10px; }
+        .profile-img { width: 85px; height: 85px; border-radius: 50%; border: 2px solid var(--primary-red); margin: 0 auto 12px; overflow: hidden; background: #000; }
+        .store-name { font-size: 1.4rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 2px; }
+
+        .stats-container { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 20px; }
+        .stat-box { background: var(--card-bg); padding: 15px 5px; border-radius: 18px; text-align: center; border: 1px solid rgba(255,255,255,0.05); backdrop-filter: blur(10px); }
+        .stat-val { font-size: 20px; font-weight: 800; color: var(--primary-red); }
+        .stat-label { font-size: 10px; color: #8e959e; text-transform: uppercase; margin-top: 4px; font-weight: bold; }
+
+        .btn-cek-nav { background: var(--card-bg); border: 1px solid rgba(255,255,255,0.1); color: var(--primary-red); padding: 14px; border-radius: 15px; width: 100%; margin-bottom: 20px; font-size: 12px; font-weight: bold; cursor: pointer; backdrop-filter: blur(10px); }
+
+        #productList { display: flex; flex-direction: column; gap: 12px; margin-bottom: 50px; }
+
+        .card { background: var(--card-bg); border: 1px solid rgba(255,255,255,0.05); border-radius: 18px; padding: 15px; position: relative; cursor: pointer; backdrop-filter: blur(10px); display: flex; align-items: center; gap: 15px; transition: 0.2s; }
+        .card:active { transform: scale(0.98); }
+        .prod-logo-container { width: 55px; height: 55px; border-radius: 14px; overflow: hidden; border: 1px solid #333; flex-shrink: 0; background: #000; }
+        .prod-logo-container img { width: 100%; height: 100%; object-fit: cover; }
+        .card-title { font-size: 15px; font-weight: 600; color: #fff; }
+        .price { color: var(--primary-red); font-size: 17px; font-weight: 800; }
+        .sold-count { font-size: 10px; color: #8e959e; font-weight: bold; margin-top: 2px; }
+
+        .stock-tag { position: absolute; top: 15px; right: 15px; font-size: 9px; font-weight: 800; padding: 3px 8px; border-radius: 8px; text-transform: uppercase; }
+        .tag-red { background: rgba(255,0,0,0.1); color: #ff4d4d; border: 1px solid #ff4d4d; }
+        .tag-green { background: rgba(16,185,129,0.1); color: var(--success-green); border: 1px solid var(--success-green); }
+
+        .modal { display: none; position: fixed; z-index: 99999; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); }
+        .modal-content { position: fixed; bottom: 0; width: 100%; max-width: 500px; background: #161a1e; padding: 25px 20px 35px; border-radius: 30px 30px 0 0; border-top: 2px solid var(--primary-red); left: 50%; transform: translateX(-50%); max-height: 90vh; overflow-y: auto; }
+
+        .qr-info-table { width: 100%; border-collapse: collapse; margin-bottom: 15px; border: 1px solid #242a32; border-radius: 12px; overflow: hidden; }
+        .qr-info-table td { padding: 10px; border: 1px solid #242a32; text-align: left; background: #0b0d0f; }
+        .qr-label { font-size: 10px; color: #8e959e; font-weight: bold; text-transform: uppercase; margin-bottom: 2px; }
+        .qr-value { font-size: 13px; font-weight: 700; color: #fff; }
+
+        .sheet-input { width: 100%; background: #0b0d0f; border: 1.5px solid #242a32; padding: 14px; color: white; border-radius: 14px; outline: none; margin-bottom: 12px; font-size: 14px; }
+        .btn-buy { background: var(--primary-red); color: white; border: none; padding: 16px; width: 100%; border-radius: 14px; font-weight: bold; cursor: pointer; font-size: 14px; }
+        .data-box { background: #000; border: 1.5px dashed var(--success-green); padding: 15px; border-radius: 12px; margin-top: 15px; color: var(--success-green); font-family: monospace; font-size: 14px; word-break: break-all; text-align: left; }
+
+        #lockScreen {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; background-image: radial-gradient(circle at center, #1a0505 0%, #000 100%);
+            z-index: 9999999999; align-items: center; justify-content: center;
+        }
+        #lockScreen.show { display: flex; }
+        .lock-card { text-align: center; padding: 50px 30px; width: 90%; max-width: 400px; background: #0a0a0a; border: 1px solid rgba(255,49,49,0.15); border-radius: 45px; box-shadow: 0 30px 70px rgba(0,0,0,1), 0 0 20px rgba(255,49,49,0.05); animation: slideUp 0.7s cubic-bezier(0.2,0.8,0.2,1); }
+        @keyframes slideUp { from { opacity:0; transform:translateY(50px); } to { opacity:1; transform:translateY(0); } }
+        .icon-lock { font-size: 70px; margin-bottom: 25px; display: inline-block; filter: drop-shadow(0 0 20px #ff3131); animation: pulse-lock 2s infinite; }
+        @keyframes pulse-lock { 0%{transform:scale(1);opacity:.8} 50%{transform:scale(1.1);opacity:1} 100%{transform:scale(1);opacity:.8} }
+        .lock-card h1 { font-size: 20px; font-weight: 900; letter-spacing: 2px; color: #ff3131; margin-bottom: 15px; text-transform: uppercase; }
+        .lock-card p { font-size: 14px; color: #777; line-height: 1.6; margin-bottom: 35px; font-weight: 500; }
+        .lock-footer { margin-top: 35px; font-size: 9px; color: #333; text-transform: uppercase; letter-spacing: 2px; font-weight: 800; }
+
+        ._wm { display:none!important; }
+    </style>
+</head>
+<body>
+
+<span class="_wm" aria-hidden="true" data-a="UG93ZXJlZCBieSBDbGF5emEgQXViZXJ0" data-b="aHR0cHM6Ly9jbGF5emEuaXMtYS5kZXY="></span>
+
+<div id="lockScreen">
+    <div class="lock-card">
+        <div class="icon-lock">🔒</div>
+        <h1>DURASI TELAH HABIS</h1>
+        <p>HALAMAN STORE TELAH DI KUNCI<br>Silakan hubungi Owner / Developer untuk perpanjangan akses berjualan.</p>
+        <div class="lock-footer">NIDALOPSTORE SECURITY SYSTEM</div>
+    </div>
+</div>
+
+<div id="preloader">
+    <div class="orbit-container">
+        <div class="orbit-ring"></div>
+        <div class="orbit-spinner"><div class="orbit-ball"></div></div>
+    </div>
+    <div class="loader-text" id="loaderTextDisplay">LOADING...</div>
+</div>
+
+<div id="errorToast" class="toast">Pesan</div>
+
+<div class="header">
+    <div class="profile-img"><img id="storePP" src="" width="100%" height="100%" style="object-fit:cover;"></div>
+    <div class="store-name" id="storeNameLabel">MY STORE</div>
+    <div id="liveClock">MEMUAT WAKTU...</div>
+</div>
+
+<div class="stats-container">
+    <div class="stat-box"><div class="stat-val" id="totalProd">0</div><div class="stat-label">Total</div></div>
+    <div class="stat-box"><div class="stat-val" id="totalStok">0</div><div class="stat-label">Ready</div></div>
+    <div class="stat-box"><div class="stat-val" id="totalTersedia">0</div><div class="stat-label">Produk</div></div>
+</div>
+
+<button class="btn-cek-nav" onclick="openInvoiceModal()">🔍 CEK INVOICE / AMBIL AKUN</button>
+<div id="productList"></div>
+
+
+<div id="paymentModal" class="modal">
+    <div class="modal-content">
+        <div id="step-input">
+            <h2 id="payTitle" style="color:var(--primary-red);margin-bottom:5px;">Produk</h2>
+            <p style="font-size:12px;color:#8e959e;margin-bottom:20px;">Lengkapi data di bawah ini</p>
+            <input type="text" id="buyerName" class="sheet-input" placeholder="Nama Lengkap">
+            <input type="email" id="buyerEmail" class="sheet-input" placeholder="Email Aktif">
+            <div id="payPrice" style="font-size:22px;font-weight:900;margin-bottom:20px;color:var(--primary-red);text-align:center;"></div>
+            <button class="btn-buy" id="btnLanjutkan" onclick="tampilkanQRIS()">Lanjutkan</button>
+        </div>
+        <div id="step-qris" style="display:none;text-align:center;">
+            <h3 style="color:var(--primary-red);margin-bottom:15px;text-transform:uppercase;">Invoice Pembayaran</h3>
+            <table class="qr-info-table">
+                <tr>
+                    <td><div class="qr-label">Nama</div><div id="qrBuyerName" class="qr-value">—</div></td>
+                    <td><div class="qr-label">ID QRIS</div><div id="qrTransactionIdDisplay" class="qr-value" style="color:var(--primary-red)">—</div></td>
+                </tr>
+                <tr><td colspan="2"><div class="qr-label">Waktu Buat</div><div id="qrCreateTime" class="qr-value">—</div></td></tr>
+                <tr>
+                    <td><div class="qr-label">Berlaku</div><div id="qrExpiredInfo" class="qr-value" style="color:var(--success-green)">15:00</div></td>
+                    <td><div class="qr-label">Code Cantik</div><div id="qrUniqueCode" class="qr-value" style="color:orange">+ Rp 0</div></td>
+                </tr>
+                <tr><td colspan="2"><div class="qr-label">Harga Asli</div><div id="qrOriginalPrice" class="qr-value">—</div></td></tr>
+            </table>
+            <div style="background:#fff;padding:10px;border-radius:15px;width:fit-content;margin:0 auto 15px;">
+                <img id="qrisImg" src="" style="width:200px;display:block;">
+            </div>
+            <div style="background:#0b0d0f;border:1.5px dashed var(--primary-red);border-radius:12px;padding:12px;text-align:center;margin:10px 0;">
+                <span style="font-size:11px;color:#8e959e;">TOTAL BAYAR</span><br>
+                <strong id="totalAmountDisplay" style="color:var(--primary-red);font-size:22px;">Rp 0</strong>
+            </div>
+            <button class="btn-buy" disabled style="background:#242a32;">MENUNGGU PEMBAYARAN...</button>
+        </div>
+        <div id="step-success" style="display:none;text-align:center;">
+            <div style="font-size:40px;margin-bottom:10px;">✅</div>
+            <h3 style="color:var(--success-green);margin-bottom:5px;">PEMBAYARAN LUNAS!</h3>
+            <div id="finalData" class="data-box"></div>
+            <button class="btn-buy" style="margin-top:15px;" onclick="location.reload()">TUTUP</button>
+        </div>
+        <button onclick="closeModal()" style="background:none;border:none;color:#888;width:100%;margin-top:20px;cursor:pointer;font-size:11px;">KEMBALI</button>
+    </div>
+</div>
+
+<div id="invoiceModal" class="modal">
+    <div class="modal-content">
+        <h2 style="color:var(--primary-red);margin-bottom:15px;">Cek Pesanan</h2>
+        <input type="text" id="inputTrxId" class="sheet-input" placeholder="Masukkan ID Transaksi">
+        <button class="btn-buy" onclick="cariInvoice()">CARI</button>
+        <div id="invoiceResult"></div>
+        <button onclick="closeInvoiceModal()" style="background:none;border:none;color:#8e959e;width:100%;margin-top:15px;cursor:pointer;font-size:12px;">TUTUP</button>
+    </div>
+</div>
+
+<script>
+    const _a = atob("UG93ZXJlZCBieSBDbGF5emEgQXViZXJ0");
+    const _b = atob("aHR0cHM6Ly9jbGF5emEuaXMtYS5kZXY=");
+    const _sig = atob("UG93ZXJlZCBieSBDbGF5emEgQXViZXJ0IHwgaHR0cHM6Ly9jbGF5emEuaXMtYS5kZXY=");
+
+    const _m = document.querySelector('meta[name="x-sig"]');
+    const _ok = _m && atob(_m.content) === _sig;
+    if (!_ok) {
+        document.getElementById('preloader').style.display = 'none';
+        document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#000;color:#ff4d4d;font-family:monospace;font-size:13px;text-align:center;padding:30px;flex-direction:column;gap:10px;"><div style=\"font-size:28px;\">⚠️</div><div>[ERR:0x4341] Integrity check failed.</div><div style=\"color:#444;font-size:11px;\">' + _sig + '</div></div>';
+    }
+
+    console.log("%c" + _a, "color:#ff3131;font-weight:900;font-size:15px;background:#111;padding:6px 14px;border-radius:4px;");
+    console.log("%c" + _b, "color:#aaa;font-size:12px;padding:2px 14px;");
+    console.log("%cThis file is protected. Unauthorized redistribution is prohibited.", "color:#444;font-size:10px;padding:0 14px 4px;");
+
+    // KONFIGURASI DATABASE BARU
+    const DB_PRODUK  = "https://ownernidalop-default-rtdb.firebaseio.com/";
+    const DB_LICENSE = "https://ownernidalop-default-rtdb.firebaseio.com/";
+    const CASHIFY_QRIS_ID = "0f3aedc9-d0c2-4d18-8922-8d54e7e46da9";
+    const MY_KEY = "OWNER-NIDALOP";
+
+    // LISENSI
+    (function checkLicense() {
+        fetch(`${DB_LICENSE}licenses/${MY_KEY}.json`)
+            .then(r => r.json())
+            .then(data => {
+                const now = new Date();
+                if (!data || data.status !== "active" || now > new Date(data.expiry_date)) {
+                    document.getElementById('preloader').style.display = 'none';
+                    document.getElementById('lockScreen').classList.add('show');
+                }
+            })
+            .catch(() => {});
+    })();
+
+    // VARIABEL GLOBAL
+    const produkCache = {};
+    let selectedProdId, selectedAkunId, selectedDataAkun, hargaFix;
+    let cashifyTransactionId, pollingInterval, countdownInterval;
+
+    // UTILS
+    function getFullDate() {
+        const days = ["MINGGU","SENIN","SELASA","RABU","KAMIS","JUMAT","SABTU"];
+        const months = ["JAN","FEB","MAR","APR","MEI","JUN","JUL","AGU","SEP","OKT","NOV","DES"];
+        const now = new Date();
+        return `${days[now.getDay()]}, ${now.getDate().toString().padStart(2,'0')} ${months[now.getMonth()]} ${now.getFullYear()} | ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}:${now.getSeconds().toString().padStart(2,'0')}`;
+    }
+    function updateClock() { const d = document.getElementById('liveClock'); if (d) d.innerText = getFullDate(); }
+    function showToast(m, s = false) {
+        const t = document.getElementById('errorToast');
+        t.innerText = m; t.className = "toast" + (s ? " success" : "") + " show";
+        setTimeout(() => t.classList.remove('show'), 3000);
+    }
+    function copyData(id) { navigator.clipboard.writeText(document.getElementById(id).innerText); showToast("Disalin!", true); }
+
+    // INIT WEB
+    async function initWeb() {
+        if (!_ok) return;
+        updateClock(); setInterval(updateClock, 1000);
+        try {
+            const res = await fetch(`${DB_PRODUK}owner_config.json`);
+            const config = await res.json();
+            if (config) {
+                document.body.style.backgroundImage = `url('${config.bg}')`;
+                document.getElementById('storeNameLabel').innerText = config.storeName || "MY STORE";
+                document.getElementById('loaderTextDisplay').innerText = config.storeName || "MY STORE";
+                if (config.pp) document.getElementById('storePP').src = config.pp;
+                const s = document.createElement('style');
+                s.innerHTML = `:root { --primary-red: ${config.colors.primary} !important; } .stat-box,.btn-cek-nav,.card,.modal-content,.qr-info-table td { background: ${config.colors.card} !important; backdrop-filter: blur(15px); }`;
+                document.head.appendChild(s);
+            }
+            await fetchProducts();
+            setTimeout(() => { document.getElementById('preloader').classList.add('fade-out'); }, 1200);
+        } catch (e) { document.getElementById('preloader').style.display = 'none'; }
+    }
+
+    // FETCH PRODUK
+    async function fetchProducts() {
+        try {
+            const [resP, resS] = await Promise.all([fetch(`${DB_PRODUK}produk.json`), fetch(`${DB_PRODUK}stok_akun.json`)]);
+            const dataP = await resP.json(); const dataS = await resS.json() || {};
+            const container = document.getElementById('productList'); container.innerHTML = '';
+            let uReady = 0, pReady = 0;
+            if (dataP) {
+                Object.keys(dataP).forEach(id => {
+                    const stk = dataS[id] ? Object.keys(dataS[id]) : [];
+                    const jml = stk.length; uReady += jml; if (jml > 0) pReady++;
+                    produkCache[id] = { nama: dataP[id].nama, harga: dataP[id].harga, stok: dataS[id] || {}, logo: dataP[id].logo, terjual: dataP[id].terjual || 0 };
+                    const hrg = parseInt(String(dataP[id].harga).replace(/\D/g,'')).toLocaleString('id-ID');
+                    container.innerHTML += `<div class="card" onclick="${jml===0?"showToast('Stok habis!')":`openPayment('${id}')`}">
+                        <div class="prod-logo-container"><img src="${dataP[id].logo}"></div>
+                        <div style="flex-grow:1;">
+                            <div class="card-title">${dataP[id].nama}</div>
+                            <div class="price">Rp ${hrg}</div>
+                            <div class="sold-count">🔥 ${produkCache[id].terjual} Terjual</div>
+                        </div>
+                        <div class="stock-tag ${jml===0?'tag-red':'tag-green'}">${jml===0?'Habis':jml+' Ready'}</div>
+                    </div>`;
+                });
+            }
+            document.getElementById('totalProd').innerText = dataP ? Object.keys(dataP).length : 0;
+            document.getElementById('totalStok').innerText = uReady;
+            document.getElementById('totalTersedia').innerText = pReady;
+        } catch (e) {}
+    }
+
+    // MODAL PEMBAYARAN
+    function openPayment(id) {
+        if (!_ok) return;
+        const p = produkCache[id]; const list = Object.keys(p.stok);
+        selectedProdId = id; selectedAkunId = list[0]; selectedDataAkun = p.stok[selectedAkunId];
+        hargaFix = parseInt(String(p.harga).replace(/\D/g,''));
+        document.getElementById('payTitle').innerText = p.nama;
+        document.getElementById('payPrice').innerText = "Rp " + hargaFix.toLocaleString('id-ID');
+        document.getElementById('paymentModal').style.display = 'block';
+    }
+
+    async function tampilkanQRIS() {
+        const n = document.getElementById('buyerName').value.trim();
+        const e = document.getElementById('buyerEmail').value.trim();
+        if (!n || !e) return showToast("Isi data!");
+        const btn = document.getElementById('btnLanjutkan'); btn.disabled = true; btn.innerHTML = 'Memproses...';
+        try {
+            const res = await fetch('https://cashify.web.id/api/generate', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ id: CASHIFY_QRIS_ID, amount: hargaFix, useUniqueCode: true }) });
+            const json = await res.json();
+            const { qr_string, transactionId, totalAmount } = json.data;
+            document.getElementById('qrisImg').src = `https://larabert-qrgen.hf.space/v1/create-qr-code?data=${encodeURIComponent(qr_string)}`;
+            document.getElementById('qrBuyerName').innerText = n.split(' ')[0].toUpperCase();
+            document.getElementById('qrTransactionIdDisplay').innerText = transactionId;
+            document.getElementById('qrCreateTime').innerText = getFullDate();
+            document.getElementById('qrOriginalPrice').innerText = "Rp " + hargaFix.toLocaleString('id-ID');
+            document.getElementById('qrUniqueCode').innerText = "+ Rp " + (totalAmount - hargaFix);
+            document.getElementById('totalAmountDisplay').innerText = "Rp " + totalAmount.toLocaleString('id-ID');
+            document.getElementById('step-input').style.display = 'none';
+            document.getElementById('step-qris').style.display = 'block';
+            cashifyTransactionId = transactionId; startCountdown(15 * 60); mulaiPolling();
+        } catch (err) { showToast("Gagal QRIS!"); btn.disabled = false; btn.innerHTML = 'Lanjutkan'; }
+    }
+
+    function startCountdown(duration) {
+        if (countdownInterval) clearInterval(countdownInterval);
+        let timer = duration; const display = document.getElementById('qrExpiredInfo');
+        countdownInterval = setInterval(() => {
+            const m = parseInt(timer/60,10), s = parseInt(timer%60,10);
+            display.innerText = (m<10?"0"+m:m)+":"+(s<10?"0"+s:s);
+            if (--timer < 0) { clearInterval(countdownInterval); display.innerText = "EXPIRED"; }
+        }, 1000);
+    }
+
+    function mulaiPolling() {
+        if (pollingInterval) clearInterval(pollingInterval);
+        pollingInterval = setInterval(async () => {
+            const res = await fetch('https://cashify.web.id/api/check-status', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ transactionId: cashifyTransactionId }) });
+            const json = await res.json();
+            if (json.data?.status === 'paid') { clearInterval(pollingInterval); clearInterval(countdownInterval); prosesLunas(); }
+        }, 5000);
+    }
+
+    async function prosesLunas() {
+        if (!_ok) return;
+        const trxId = `TRX-${Math.floor(100000 + Math.random() * 900000)}`;
+        const emailU = document.getElementById('buyerEmail').value;
+        const namaU = document.getElementById('buyerName').value;
+        try {
+            await fetch(`${DB_PRODUK}stok_akun/${selectedProdId}/${selectedAkunId}.json`, { method:'DELETE' });
+            const newSold = (produkCache[selectedProdId].terjual || 0) + 1;
+            await fetch(`${DB_PRODUK}produk/${selectedProdId}.json`, { method:'PATCH', body: JSON.stringify({ terjual: newSold }) });
+            await fetch(`${DB_PRODUK}transaksi/${trxId}.json`, { method:'PUT', body: JSON.stringify({ data: selectedDataAkun, email: emailU, nama: namaU, produk: produkCache[selectedProdId].nama, harga: hargaFix, id_trx: trxId, tanggal: new Date().toLocaleString('id-ID') }) });
+            document.getElementById('finalData').innerText = selectedDataAkun;
+            document.getElementById('step-qris').style.display = 'none';
+            document.getElementById('step-success').style.display = 'block';
+            showToast("Lunas!", true);
+        } catch (e) { showToast("Error Simpan Data!"); }
+    }
+
+    function closeModal() {
+        clearInterval(pollingInterval); clearInterval(countdownInterval);
+        document.getElementById('paymentModal').style.display = 'none';
+        document.getElementById('step-input').style.display = 'block';
+        document.getElementById('step-qris').style.display = 'none';
+    }
+
+    function openInvoiceModal() { document.getElementById('invoiceModal').style.display = 'block'; }
+    function closeInvoiceModal() { document.getElementById('invoiceModal').style.display = 'none'; }
+
+    async function cariInvoice() {
+        const id = document.getElementById('inputTrxId').value.trim();
+        if (!id) return showToast("Masukkan ID Transaksi!");
+        const res = await fetch(`${DB_PRODUK}transaksi/${id}.json`);
+        const d = await res.json();
+        if (!d) return showToast("Tidak ditemukan!");
+        document.getElementById('invoiceResult').innerHTML = `<div class="data-box" id="invData">${d.data}</div><button class="btn-buy" style="background:var(--success-green);margin-top:10px;" onclick="copyData('invData')">SALIN DATA</button>`;
+    }
+
+    initWeb();
+</script>
+
+</body>
+</html>
