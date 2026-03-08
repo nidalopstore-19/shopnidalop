@@ -17,7 +17,6 @@
             display: flex; flex-direction: column;
             align-items: center; justify-content: center;
             z-index: 999999999;
-            /* Properti transisi ditingkatkan agar lebih smooth */
             transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.8s;
             opacity: 1;
             visibility: visible;
@@ -185,22 +184,28 @@
             </div>
             <button class="btn-buy" disabled style="background:#242a32;">MENUNGGU PEMBAYARAN...</button>
         </div>
-        <div id="step-success" style="display:none;text-align:center;">
+        <div id="step-success" style="display:none; text-align:center;">
             <div style="font-size:40px;margin-bottom:10px;">✅</div>
-            <h3 style="color:var(--success-green);margin-bottom:5px;">PEMBAYARAN LUNAS!</h3>
+            <h3 style="color:var(--success-green);margin-bottom:15px;">PEMBAYARAN LUNAS!</h3>
             
-            <div style="margin-bottom: 15px; font-size: 11px; color: #8e959e; line-height: 1.5;">
-                <div style="display: flex; align-items: center; justify-content: center; gap: 8px;">
-                    TRX ID: <span id="successTrxId" style="color:var(--primary-red); font-weight: bold;">—</span>
-                    <button onclick="copyTrx()" style="background: var(--primary-red); border:none; color:#fff; font-size:8px; padding:2px 6px; border-radius:4px; cursor:pointer;">COPY</button>
+            <div style="background: #0b0d0f; border-radius: 15px; padding: 15px; margin-bottom: 15px; border: 1px solid #242a32;">
+                <div style="margin-bottom: 12px;">
+                    <div style="font-size: 10px; color: #8e959e; text-transform: uppercase; font-weight: 800; letter-spacing: 1px;">ID Transaksi</div>
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 5px;">
+                        <span id="successTrxId" style="color:var(--primary-red); font-size: 16px; font-weight: 900; letter-spacing: 0.5px;">—</span>
+                        <button onclick="copyTrx()" style="background: var(--primary-red); border:none; color:#fff; font-size:9px; padding:4px 10px; border-radius:8px; cursor:pointer; font-weight: bold; text-transform: uppercase;">Copy</button>
+                    </div>
                 </div>
-                EMAIL: <span id="successEmail" style="color: #fff;">—</span>
+                <div style="border-top: 1px solid #1c2126; padding-top: 12px;">
+                    <div style="font-size: 10px; color: #8e959e; text-transform: uppercase; font-weight: 800; letter-spacing: 1px;">Email Pembeli</div>
+                    <div id="successEmail" style="color: #fff; font-size: 14px; font-weight: 600; margin-top: 3px;">—</div>
+                </div>
             </div>
 
             <div id="finalData" class="data-box"></div>
             <button class="btn-buy" style="margin-top:15px;" onclick="location.reload()">TUTUP</button>
         </div>
-        <button onclick="closeModal()" style="background:none; border:none; color:#888; width:100%; margin-top:20px; cursor:pointer; font-size:11px;">KEMBALI</button>
+        <button onclick="closeModal()" style="background:none;border:none;color:#888;width:100%;margin-top:20px;cursor:pointer;font-size:11px;">KEMBALI</button>
     </div>
 </div>
 
@@ -393,14 +398,14 @@
             await fetch(`${DB_PRODUK}produk/${selectedProdId}.json`, { method:'PATCH', body: JSON.stringify({ terjual: newSold }) });
             await fetch(`${DB_PRODUK}transaksi/${trxId}.json`, { method:'PUT', body: JSON.stringify({ data: selectedDataAkun, email: emailU, id_trx: trxId }) });
             
-            // ISI DATA TRX & EMAIL KE TAMPILAN SUKSES
+            // ISI DATA KE MODAL SUKSES
             document.getElementById('successTrxId').innerText = trxId;
             document.getElementById('successEmail').innerText = emailU;
             
             document.getElementById('finalData').innerText = selectedDataAkun;
             document.getElementById('step-qris').style.display = 'none';
             document.getElementById('step-success').style.display = 'block';
-            showToast("Lunas!", true);
+            showToast("Pembayaran Berhasil!", true);
         } catch (e) { showToast("Error Simpan Data!"); }
     }
 
@@ -419,7 +424,7 @@
         if (!id) return showToast("Masukkan ID Transaksi!");
         const res = await fetch(`${DB_PRODUK}transaksi/${id}.json`);
         const d = await res.json();
-        if (!d) return showToast("Tidak ditemukan!");
+        if (!d) return showToast("ID Tidak ditemukan!");
         document.getElementById('invoiceResult').innerHTML = `<div class="data-box" id="invData">${d.data}</div><button class="btn-buy" style="background:var(--success-green);margin-top:10px;" onclick="copyData('invData')">SALIN DATA</button>`;
     }
 
