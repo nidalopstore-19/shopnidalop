@@ -111,14 +111,21 @@
 
         ._wm { display:none!important; }
 
-        /* --- ANIMASI CEKLIS MEWAH --- */
-        .success-animation { margin: 20px auto; }
-        .checkmark { width: 80px; height: 80px; border-radius: 50%; display: block; stroke-width: 2; stroke: #fff; stroke-miterlimit: 10; box-shadow: inset 0px 0px 0px var(--success-green); animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both; position: relative; margin: 0 auto; }
-        .checkmark__circle { stroke-dasharray: 166; stroke-dashoffset: 166; stroke-width: 2; stroke-miterlimit: 10; stroke: var(--success-green); fill: none; animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards; }
-        .checkmark__check { transform-origin: 50% 50%; stroke-dasharray: 48; stroke-dashoffset: 48; animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards; }
-        @keyframes stroke { 100% { stroke-dashoffset: 0; } }
-        @keyframes scale { 0%, 100% { transform: none; } 50% { transform: scale3d(1.1, 1.1, 1); } }
-        @keyframes fill { 100% { box-shadow: inset 0px 0px 0px 80px var(--success-green); } }
+        /* --- STYLES ANIMASI CEKLIS BARU BOS --- */
+        .check-container { display: flex; justify-content: center; align-items: center; margin-bottom: 20px; }
+        .check-circle {
+          width: 90px; height: 90px;
+          background: #1de9b6; border-radius: 50%;
+          display: flex; align-items: center; justify-content: center;
+          color: white; font-size: 40px;
+          box-shadow: 0 0 20px rgba(29,233,182,0.4);
+          animation: smoothPulse 2.5s ease-in-out infinite;
+        }
+        @keyframes smoothPulse {
+          0% { transform: scale(1); box-shadow: 0 0 10px rgba(29,233,182,0.3); }
+          50% { transform: scale(1.08); box-shadow: 0 0 35px rgba(29,233,182,0.6); }
+          100% { transform: scale(1); box-shadow: 0 0 10px rgba(29,233,182,0.3); }
+        }
     </style>
 </head>
 <body>
@@ -195,23 +202,23 @@
         </div>
         
         <div id="step-success" style="display:none; text-align:center;">
-            <div class="success-animation">
-                <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52"><circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none" /><path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" /></svg>
+            <div class="check-container">
+                <div class="check-circle">✓</div>
             </div>
-            <h3 style="color:var(--success-green); margin-bottom:15px; letter-spacing: 1px;">PEMBAYARAN LUNAS!</h3>
+            <h3 style="color:var(--success-green);margin-bottom:15px;">PEMBAYARAN LUNAS!</h3>
             
-            <div style="background: #242a32; border-radius: 20px; padding: 20px; margin-bottom: 12px; border: 1.5px solid rgba(255,255,255,0.1); text-align: left;">
-                <div style="margin-bottom: 15px;">
+            <div style="background: #0b0d0f; border-radius: 15px; padding: 15px; margin-bottom: 15px; border: 1px solid #242a32; text-align: left;">
+                <div style="margin-bottom: 12px;">
                     <div style="font-size: 10px; color: #8e959e; text-transform: uppercase; font-weight: 800; letter-spacing: 1px;">ID Transaksi</div>
-                    <div id="successTrxId" style="color:#ffffff; font-size: 16px; font-weight: 900; margin-top: 4px; word-break: break-all;">—</div>
+                    <div id="successTrxId" style="color:#ffffff; font-size: 16px; font-weight: 900; letter-spacing: 0.5px; margin-top: 4px;">—</div>
                 </div>
-                <div style="border-top: 1px solid rgba(255,255,255,0.05); padding-top: 15px;">
+                <div style="border-top: 1px solid #1c2126; padding-top: 12px;">
                     <div style="font-size: 10px; color: #8e959e; text-transform: uppercase; font-weight: 800; letter-spacing: 1px;">Email Pembeli</div>
-                    <div id="successEmail" style="color: #ffffff; font-size: 14px; font-weight: 600; margin-top: 4px; word-break: break-all;">—</div>
+                    <div id="successEmail" style="color: #ffffff; font-size: 14px; font-weight: 600; margin-top: 3px;">—</div>
                 </div>
             </div>
 
-            <button onclick="copyTrx()" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color:#fff; font-size:11px; padding:10px 20px; border-radius:12px; cursor:pointer; font-weight: bold; width: 100%; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; gap: 8px;">📋 COPY TRX ID</button>
+            <button onclick="copyTrx()" style="background: var(--primary-red); border:none; color:#fff; font-size:11px; padding:10px 20px; border-radius:12px; cursor:pointer; font-weight: bold; width: 100%; margin-bottom: 15px; text-transform: uppercase;">COPY TRX ID</button>
 
             <div id="finalData" class="data-box"></div>
             <button class="btn-buy" style="margin-top:15px;" onclick="location.reload()">TUTUP</button>
