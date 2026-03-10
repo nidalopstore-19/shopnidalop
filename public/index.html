@@ -281,7 +281,7 @@
         const days = ["MINGGU","SENIN","SELASA","RABU","KAMIS","JUMAT","SABTU"];
         const months = ["JAN","FEB","MAR","APR","MEI","JUN","JUL","AGU","SEP","OKT","NOV","DES"];
         const now = new Date();
-        return `${days[now.getDay()]}, ${now.getDate().toString().padStart(2,'0')} ${months[now.getMonth()]} ${now.getFullYear()} | ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}:${now.getSeconds().toString().padStart(2,'0')}`;
+        return `${now.getDate().toString().padStart(2,'0')}/${(now.getMonth()+1).toString().padStart(2,'0')}/${now.getFullYear()} ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
     }
     function updateClock() { const d = document.getElementById('liveClock'); if (d) d.innerText = getFullDate(); }
     function showToast(m, s = false) {
@@ -399,19 +399,31 @@
         const jam = String(now.getHours()).padStart(2, '0');
         const mnt = String(now.getMinutes()).padStart(2, '0');
         const randomKe = Math.floor(100 + Math.random() * 899);
-        
         const trxId = `TRX-${thn}${hargaFix}${randomKe}${tgl}${jam}${mnt}9`;
-
         const emailU = document.getElementById('buyerEmail').value;
+        const buyerN = document.getElementById('buyerName').value;
+
         try {
             await fetch(`${DB_PRODUK}stok_akun/${selectedProdId}/${selectedAkunId}.json`, { method:'DELETE' });
             const newSold = (produkCache[selectedProdId].terjual || 0) + 1;
             await fetch(`${DB_PRODUK}produk/${selectedProdId}.json`, { method:'PATCH', body: JSON.stringify({ terjual: newSold }) });
-            await fetch(`${DB_PRODUK}transaksi/${trxId}.json`, { method:'PUT', body: JSON.stringify({ data: selectedDataAkun, email: emailU, id_trx: trxId }) });
+            
+            // SIMPAN DATA LENGKAP UNTUK LAPORAN KEUANGAN
+            await fetch(`${DB_PRODUK}transaksi/${trxId}.json`, { 
+                method:'PUT', 
+                body: JSON.stringify({ 
+                    data: selectedDataAkun, 
+                    email: emailU, 
+                    id_trx: trxId,
+                    harga: hargaFix,
+                    nama: buyerN,
+                    produk: produkCache[selectedProdId].nama,
+                    tanggal: getFullDate()
+                }) 
+            });
             
             document.getElementById('successTrxId').innerText = trxId;
             document.getElementById('successEmail').innerText = emailU;
-            
             document.getElementById('finalData').innerText = selectedDataAkun;
             document.getElementById('step-qris').style.display = 'none';
             document.getElementById('step-success').style.display = 'block';
