@@ -1,30 +1,19 @@
 <!DOCTYPE html>
-<html lang="id" data-v="UG93ZXJlZCBieSBDbGF5emEgQXViZXJ0" data-src="aHR0cHM6Ly9jbGF5emEuaXMtYS5kZXY=">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="author" content="Q2xheXphIEF1YmVydA==">
-    <meta name="x-src" content="aHR0cHM6Ly9jbGF5emEuaXMtYS5kZXY=">
-    <meta name="x-sig" content="UG93ZXJlZCBieSBDbGF5emEgQXViZXJ0IHwgaHR0cHM6Ly9jbGF5emEuaXMtYS5kZXY=">
     <title>NIDALOP STORE WEB</title>
 
     <style>
-
         #preloader {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: #000000;
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
-            z-index: 999999999;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000000; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; z-index: 999999999;
             transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.8s;
-            opacity: 1;
-            visibility: visible;
+            opacity: 1; visibility: visible;
         }
-        #preloader.fade-out { 
-            opacity: 0; 
-            visibility: hidden; 
-        }
+        #preloader.fade-out { opacity: 0; visibility: hidden; }
         .orbit-container { position: relative; width: 85px; height: 85px; }
         .orbit-ring { position: absolute; width: 100%; height: 100%; border: 2px solid rgba(255,255,255,0.05); border-radius: 50%; }
         .orbit-spinner { position: absolute; width: 100%; height: 100%; border-radius: 50%; animation: orbit-spin 1.2s linear infinite; }
@@ -109,9 +98,6 @@
         .lock-card p { font-size: 14px; color: #777; line-height: 1.6; margin-bottom: 35px; font-weight: 500; }
         .lock-footer { margin-top: 35px; font-size: 9px; color: #333; text-transform: uppercase; letter-spacing: 2px; font-weight: 800; }
 
-        ._wm { display:none!important; }
-
-        /* --- STYLES ANIMASI CEKLIS BARU BOS --- */
         .check-container { display: flex; justify-content: center; align-items: center; margin-bottom: 20px; }
         .check-circle {
           width: 90px; height: 90px;
@@ -129,8 +115,6 @@
     </style>
 </head>
 <body>
-
-<span class="_wm" aria-hidden="true" data-a="UG93ZXJlZCBieSBDbGF5emEgQXViZXJ0" data-b="aHR0cHM6Ly9jbGF5emEuaXMtYS5kZXY="></span>
 
 <div id="lockScreen">
     <div class="lock-card">
@@ -238,26 +222,14 @@
 </div>
 
 <script>
-    const _a = atob("UG93ZXJlZCBieSBDbGF5emEgQXViZXJ0");
-    const _b = atob("aHR0cHM6Ly9jbGF5emEuaXMtYS5kZXY=");
-    const _sig = atob("UG93ZXJlZCBieSBDbGF5emEgQXViZXJ0IHwgaHR0cHM6Ly9jbGF5emEuaXMtYS5kZXY=");
-
-    const _m = document.querySelector('meta[name="x-sig"]');
-    const _ok = _m && atob(_m.content) === _sig;
-    if (!_ok) {
-        document.getElementById('preloader').style.display = 'none';
-        document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#000;color:#ff4d4d;font-family:monospace;font-size:13px;text-align:center;padding:30px;flex-direction:column;gap:10px;"><div style=\"font-size:28px;\">⚠️</div><div>[ERR:0x4341] Integrity check failed.</div><div style=\"color:#444;font-size:11px;\">' + _sig + '</div></div>';
-    }
-
-    console.log("%c" + _a, "color:#ff3131;font-weight:900;font-size:15px;background:#111;padding:6px 14px;border-radius:4px;");
-    console.log("%c" + _b, "color:#aaa;font-size:12px;padding:2px 14px;");
-    console.log("%cThis file is protected. Unauthorized redistribution is prohibited.", "color:#444;font-size:10px;padding:0 14px 4px;");
+    // SISTEM KEAMANAN DINONAKTIFKAN (BYPASS INTEGRITY CHECK)
+    const _ok = true; 
 
     // KONFIGURASI
-    const DB_PRODUK  = "https://ownernidalop-default-rtdb.firebaseio.com/";
+    const DB_PRODUK  = "https://webshopfalz-default-rtdb.firebaseio.com/";
     const DB_LICENSE = "https://ownernidalop-default-rtdb.firebaseio.com/";
     const CASHIFY_QRIS_ID = "0f3aedc9-d0c2-4d18-8922-8d54e7e46da9";
-    const MY_KEY = "OWNER-NIDALOP";
+    const MY_KEY = "key-20261931772buyfalz";
 
     // LISENSI
     (function checkLicense() {
@@ -278,8 +250,6 @@
     let cashifyTransactionId, pollingInterval, countdownInterval;
 
     function getFullDate() {
-        const days = ["MINGGU","SENIN","SELASA","RABU","KAMIS","JUMAT","SABTU"];
-        const months = ["JAN","FEB","MAR","APR","MEI","JUN","JUL","AGU","SEP","OKT","NOV","DES"];
         const now = new Date();
         return `${now.getDate().toString().padStart(2,'0')}/${(now.getMonth()+1).toString().padStart(2,'0')}/${now.getFullYear()} ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
     }
@@ -293,7 +263,6 @@
     function copyTrx() { navigator.clipboard.writeText(document.getElementById('successTrxId').innerText); showToast("TRX ID Disalin!", true); }
 
     async function initWeb() {
-        if (!_ok) return;
         updateClock(); setInterval(updateClock, 1000);
         try {
             const res = await fetch(`${DB_PRODUK}owner_config.json`);
@@ -340,7 +309,6 @@
     }
 
     function openPayment(id) {
-        if (!_ok) return;
         const p = produkCache[id]; const list = Object.keys(p.stok);
         selectedProdId = id; selectedAkunId = list[0]; selectedDataAkun = p.stok[selectedAkunId];
         hargaFix = parseInt(String(p.harga).replace(/\D/g,''));
@@ -391,8 +359,6 @@
     }
 
     async function prosesLunas() {
-        if (!_ok) return;
-        
         const now = new Date();
         const thn = now.getFullYear();
         const tgl = String(now.getDate()).padStart(2, '0');
@@ -401,14 +367,13 @@
         const randomKe = Math.floor(100 + Math.random() * 899);
         const trxId = `TRX-${thn}${hargaFix}${randomKe}${tgl}${jam}${mnt}9`;
         const emailU = document.getElementById('buyerEmail').value;
-        const buyerN = document.getElementById('buyerName').value;
+        const nameU = document.getElementById('buyerName').value;
 
         try {
             await fetch(`${DB_PRODUK}stok_akun/${selectedProdId}/${selectedAkunId}.json`, { method:'DELETE' });
             const newSold = (produkCache[selectedProdId].terjual || 0) + 1;
             await fetch(`${DB_PRODUK}produk/${selectedProdId}.json`, { method:'PATCH', body: JSON.stringify({ terjual: newSold }) });
             
-            // SIMPAN DATA LENGKAP UNTUK LAPORAN KEUANGAN
             await fetch(`${DB_PRODUK}transaksi/${trxId}.json`, { 
                 method:'PUT', 
                 body: JSON.stringify({ 
@@ -416,7 +381,7 @@
                     email: emailU, 
                     id_trx: trxId,
                     harga: hargaFix,
-                    nama: buyerN,
+                    nama: nameU,
                     produk: produkCache[selectedProdId].nama,
                     tanggal: getFullDate()
                 }) 
@@ -437,7 +402,6 @@
         document.getElementById('step-input').style.display = 'block';
         document.getElementById('step-qris').style.display = 'none';
     }
-
     function openInvoiceModal() { document.getElementById('invoiceModal').style.display = 'block'; }
     function closeInvoiceModal() { document.getElementById('invoiceModal').style.display = 'none'; }
 
@@ -452,6 +416,5 @@
 
     initWeb();
 </script>
-
 </body>
 </html>
